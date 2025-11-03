@@ -1,3 +1,4 @@
+// модель одного товара
 export type Product = {
   id: number;
   title: string;
@@ -9,11 +10,13 @@ export type Product = {
   thumbnail: string;
   images: string[];
 };
+
+// форма данных от сервера результат одного запроса на список товаров.
 export type ProductsResponse = {
   items: Product[];
-  total: number;
-  skip: number;
-  limit: number;
+  total: number; // какие товары пришли сейчас, сколько всего (total)
+  skip: number; // какие параметры пагинации использовались (skip).
+  limit: number; // какие параметры пагинации использовались (limit).
 };
 
 // ---  types ---
@@ -25,6 +28,7 @@ export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const EDIT_PRODUCT = "EDIT_PRODUCT";
 
 // --- State ---
+// форма данных в  приложении
 export type ProductsState = {
   items: Product[];
   total: number;

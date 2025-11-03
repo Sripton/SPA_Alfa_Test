@@ -14,33 +14,41 @@ import {
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/productStore";
-import { fetchProducts } from "../../api/apiProducts";
-import { setProducts } from "../../actions/productActions";
+import { loadProducts } from "../../actions/productActions";
+import type { Product } from "../../types/productTypes";
 export default function Products() {
-  const [query, setQuery] = useState("");
-  const items = useSelector<RootState>((store) => store.products.items);
   const dispatch = useDispatch<AppDispatch>();
+  const items = useSelector<RootState, Product[]>(
+    (store) => store.products.items
+  );
+  const total = useSelector<RootState, number>((store) => store.products.total);
 
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const PAGE_SIZE = 12;
 
-  const load = async (opts?: { q?: string; page?: number }) => {
+  const fetchPage = async (opts?: { query?: string; page?: number }) => {
     try {
-      const currentPage = opts?.page ?? page; // используем переданную страницу или текущую из состояния
-      const skip = (currentPage - 1) * PAGE_SIZE;
-      const response = await fetchProducts(
-        PAGE_SIZE,
-        skip,
-        opts?.q ?? (query || undefined)
-      );
-      dispatch(setProducts(response.products));
+      const q = opts?.query ?? (query || undefined);
+      const p = opts?.page ?? page;
+      await dispatch(loadProducts(PAGE_SIZE, p, q) as any);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    void load({ page: 1 });
+    void fetchPage({ page: 1 });
   }, []);
+
+  // два аргумента: первый — событие (оно не нужно), второй — номер выбранной страницы.
+  const handlePageChange = async (_: unknown, value: number) => {
+    setPage(value); // setPage запускает обновление состояния
+    await fetchPage({ page: value }); // fetchPage сразу получает нужный номер страницы через параметр value
+  };
+
+  const pagesCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
   console.log("items", items);
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -83,7 +91,9 @@ export default function Products() {
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <Pagination
-            count={10} // при желании подставь Math.ceil(total / PAGE_SIZE)
+            page={page}
+            count={pagesCount} // при желании подставь Math.ceil(total / PAGE_SIZE)
+            onChange={handlePageChange}
             color="primary"
           />
         </Box>

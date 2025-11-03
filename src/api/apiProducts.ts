@@ -1,11 +1,18 @@
 import type { ProductsResponse, Product } from "../types/productTypes";
 const Base = "https://dummyjson.com";
 
+type ApiProductsResponse = {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+};
+
 export async function fetchProducts(
   limit = 12, // сколько товаров вернуть
   skip = 0,
   query?: string // необязательная строка поиска
-): Promise<ProductsResponse> {
+): Promise<ApiProductsResponse> {
   // функция всегда возвращает Promise, который даст данные типа ProductsResponse.
   // query - необязательный параметр ? -> либо string || undefined
   const url = query

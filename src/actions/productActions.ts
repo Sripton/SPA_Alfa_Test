@@ -11,7 +11,14 @@ export const setProducts = (
   payload: { items, total },
 });
 
-export const loadProducts = () => async (dispatch: Dispatch) => {
-  const data = await fetchProducts();
-  dispatch(setProducts(data.items, data.total));
-};
+export const loadProducts =
+  // limit -> сколько взять товаров
+  // page - какую страницу (page)
+  // query - поисковая строка, если введене запрос
+
+    (limit = 12, page = 1, query?: string) =>
+    async (dispatch: Dispatch) => {
+      const skip = (page - 1) * limit; // страница 1 → skip=0, страница 2 → skip=limit
+      const data = await fetchProducts(limit, skip, query); // запрос к API  fetchProducts
+      dispatch(setProducts(data.products, data.total)); // Кладём загруженные товары в стор:
+    };
