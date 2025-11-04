@@ -11,6 +11,7 @@ import {
   Box,
   Pagination,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/productStore";
@@ -47,14 +48,27 @@ export default function Products() {
     await fetchPage({ page: value }); // fetchPage сразу получает нужный номер страницы через параметр value
   };
 
+  const handleSearch = async () => {
+    setPage(1);
+    await fetchPage({ query: query, page: 1 });
+  };
   const pagesCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   console.log("items", items);
+  console.log("query", query);
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 3 }}>
-        <TextField fullWidth size="small" label="Поиск по товарам"></TextField>
-        <Button variant="contained">Найти</Button>
+        <TextField
+          fullWidth
+          size="small"
+          label="Поиск по товарам"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        ></TextField>
+        <Button variant="contained" onClick={handleSearch}>
+          Найти
+        </Button>
       </Stack>
 
       <>
@@ -80,7 +94,12 @@ export default function Products() {
                   <Typography>{product.brand}</Typography>
                   <Typography>{product.price}</Typography>
                   <Typography>{product.rating}</Typography>
-                  <Button sx={{ mt: 2 }} variant="outlined">
+                  <Button
+                    component={Link}
+                    to={`/products/${product.id}`}
+                    sx={{ mt: 2 }}
+                    variant="outlined"
+                  >
                     Подробнее
                   </Button>
                 </CardContent>
@@ -92,7 +111,7 @@ export default function Products() {
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <Pagination
             page={page}
-            count={pagesCount} // при желании подставь Math.ceil(total / PAGE_SIZE)
+            count={pagesCount}
             onChange={handlePageChange}
             color="primary"
           />

@@ -1,7 +1,7 @@
-import { SET_PRODUCTS } from "../types/productTypes";
+import { SET_PRODUCTS, SET_PRODUCT } from "../types/productTypes";
 import type { Product, ProductsAction } from "../types/productTypes";
 import type { Dispatch } from "redux";
-import { fetchProducts } from "../api/apiProducts";
+import { fetchProducts, fetchProductById } from "../api/apiProducts";
 
 export const setProducts = (
   items: Product[],
@@ -10,11 +10,16 @@ export const setProducts = (
   type: SET_PRODUCTS,
   payload: { items, total },
 });
+export const setProduct = (product: Product): ProductsAction => ({
+  type: SET_PRODUCT,
+  payload: product,
+});
 
 export const loadProducts =
   // limit -> сколько взять товаров
   // page - какую страницу (page)
   // query - поисковая строка, если введене запрос
+
 
     (limit = 12, page = 1, query?: string) =>
     async (dispatch: Dispatch) => {
@@ -22,3 +27,8 @@ export const loadProducts =
       const data = await fetchProducts(limit, skip, query); // запрос к API  fetchProducts
       dispatch(setProducts(data.products, data.total)); // Кладём загруженные товары в стор:
     };
+
+export const loadProduct = (id: number) => async (dispatch: Dispatch) => {
+  const data = await fetchProductById(id);
+  dispatch(setProduct(data));
+};

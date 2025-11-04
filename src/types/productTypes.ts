@@ -21,6 +21,7 @@ export type ProductsResponse = {
 
 // ---  types ---
 export const SET_PRODUCTS = "SET_PRODUCTS";
+export const SET_PRODUCT = "SET_PRODUCT";
 export const TOGGLE_LIKE = "TOGGLE_LIKE";
 export const REMOVE_PRODUCT = "REMOVE_PRODUCT";
 export const SET_FILTER = "SET_FILTER";
@@ -36,10 +37,12 @@ export type ProductsState = {
   removedIds: number[];
   created: Product[];
   filter: "all" | "favorites";
+  current: Product | null; // для получения продукта по id
 };
 
 export type ProductsAction =
   | { type: typeof SET_PRODUCTS; payload: { items: Product[]; total: number } }
+  | { type: typeof SET_PRODUCT; payload: Product }
   | { type: typeof TOGGLE_LIKE; payload: number }
   | { type: typeof REMOVE_PRODUCT; payload: number }
   | { type: typeof SET_FILTER; payload: "all" | "favorites" }

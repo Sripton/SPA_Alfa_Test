@@ -1,4 +1,4 @@
-import { SET_PRODUCTS } from "../types/productTypes";
+import { SET_PRODUCTS, SET_PRODUCT } from "../types/productTypes";
 import type { ProductsState } from "../types/productTypes";
 import type { AnyAction } from "@reduxjs/toolkit";
 const initialState: ProductsState = {
@@ -8,6 +8,7 @@ const initialState: ProductsState = {
   removedIds: [],
   created: [],
   filter: "all",
+  current: null,
 };
 export default function productsReducer(
   state = initialState,
@@ -20,6 +21,8 @@ export default function productsReducer(
         items: action.payload.items,
         total: action.payload.total,
       };
+    case SET_PRODUCT:
+      return { ...state, current: action.payload };
     default:
       return state;
   }
