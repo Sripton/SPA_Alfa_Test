@@ -20,6 +20,7 @@ import type { RootState, AppDispatch } from "../../redux/store/productStore";
 import { loadProducts } from "../../redux/actions/productActions";
 import type { Product } from "../../redux/types/productTypes";
 import LikeButton from "../LikeButton/LikeButton";
+import { removeProduct } from "../../redux/actions/productActions";
 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -58,8 +59,7 @@ export default function Products() {
   };
   const pagesCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  console.log("items", items);
-  console.log("query", query);
+  const onRemove = (id: number) => dispatch(removeProduct(id));
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 3 }}>
@@ -181,6 +181,11 @@ export default function Products() {
                 >
                   <LikeButton id={product.id} size="small" stopNav />
                   <DeleteIcon
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onRemove(product.id);
+                    }}
                     sx={{ color: "#ee9595", cursor: "pointer", ml: "auto" }}
                   />
                 </Box>

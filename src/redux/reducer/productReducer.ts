@@ -3,6 +3,7 @@ import {
   SET_PRODUCT,
   SET_LIKES,
   TOGGLE_LIKE,
+  REMOVE_PRODUCT,
 } from "../types/productTypes";
 import type { ProductsState } from "../types/productTypes";
 import type { AnyAction } from "@reduxjs/toolkit";
@@ -52,6 +53,24 @@ export default function productsReducer(
         ? state.likedIds.filter((like) => like !== idNum)
         : [...state.likedIds, idNum];
       return { ...state, likedIds: next };
+    }
+
+    case REMOVE_PRODUCT: {
+      const idNum = Number(action.payload); // id
+      if (Number.isNaN(idNum)) return state;
+      // проверка наличия в  state.removedIds (id) удаленного товара
+      const exist = state.removedIds.includes(idNum);
+      return {
+        ...state, // копируем всё состояние
+        // Обновление состояния:
+        removedIds: exist // Если товар уже удален
+          ? state.removedIds // оставляем массив как есть
+          : [...state.removedIds, idNum], // добавляем новый ID в конец
+
+        items: state.items.filter((p) => p.id !== idNum),
+        total: Math.max(state.total - (exist ? 0 : 1)),
+        likedIds: state.likedIds.filter((p) => p !== idNum),
+      };
     }
     default:
       return state;

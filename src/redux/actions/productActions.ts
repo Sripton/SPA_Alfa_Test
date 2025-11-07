@@ -76,3 +76,9 @@ export const toggleLike =
       return error;
     }
   };
+
+
+  export const removeProduct = (id: number): ProductsAction => ({
+    type: REMOVE_PRODUCT,
+    payload: id
+  });
