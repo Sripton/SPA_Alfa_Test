@@ -9,10 +9,14 @@ import {
   ListItem,
 } from "@mui/material";
 import "./app.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { hydrateLikes } from "./redux/actions/productActions";
 export default function App() {
   const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   // Открытие/закрытие бокового меню
   const toggleDraweMenu = () => setOpenMenu((prev) => !prev);
 
@@ -26,6 +30,11 @@ export default function App() {
       navigate("/");
     }
   };
+
+  useEffect(() => {
+    dispatch<any>(hydrateLikes());
+  }, []);
+
   return (
     <>
       <CssBaseline />

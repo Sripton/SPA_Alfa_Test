@@ -1,4 +1,4 @@
-import type { ProductsResponse, Product } from "../types/productTypes";
+import type { Product } from "../redux/types/productTypes";
 const Base = "https://dummyjson.com";
 
 type ApiProductsResponse = {

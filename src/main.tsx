@@ -6,7 +6,7 @@ import Products from "./pages/Products/Products.tsx";
 import ProductsByID from "./pages/ProductsByID/ProductsByID.tsx";
 import CreateProduct from "./pages/CreateProduct/CreateProduct.tsx";
 import App from "./App.tsx";
-import { store } from "./store/productStore.ts";
+import { store } from "./redux/store/productStore.ts";
 
 const router = createBrowserRouter([
   {

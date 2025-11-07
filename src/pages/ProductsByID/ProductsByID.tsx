@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../../store/productStore";
-import type { Product } from "../../types/productTypes";
+import type { RootState, AppDispatch } from "../../redux/store/productStore";
+import type { Product } from "../../redux/types/productTypes";
 import { useParams, Link } from "react-router-dom";
-import { loadProduct } from "../../actions/productActions";
+import { loadProduct } from "../../redux/actions/productActions";
 
 export default function ProductsByID() {
   const dispatch = useDispatch<AppDispatch>();

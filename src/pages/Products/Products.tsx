@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Container,
@@ -10,13 +11,16 @@ import {
   Typography,
   Box,
   Pagination,
+  CardActionArea,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../../store/productStore";
-import { loadProducts } from "../../actions/productActions";
-import type { Product } from "../../types/productTypes";
+import type { RootState, AppDispatch } from "../../redux/store/productStore";
+import { loadProducts } from "../../redux/actions/productActions";
+import type { Product } from "../../redux/types/productTypes";
+import LikeButton from "../LikeButton/LikeButton";
+
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector<RootState, Product[]>(
@@ -81,28 +85,105 @@ export default function Products() {
                   display: "flex",
                   flexDirection: "column",
                   borderRadius: 3,
+                  cursor: "pointer",
                 }}
               >
-                <CardMedia
-                  component="img"
-                  image={product.thumbnail}
-                  alt={product.title}
-                  sx={{ objectFit: "cover" }}
-                ></CardMedia>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography>{product.title}</Typography>
-                  <Typography>{product.brand}</Typography>
-                  <Typography>{product.price}</Typography>
-                  <Typography>{product.rating}</Typography>
-                  <Button
-                    component={Link}
-                    to={`/products/${product.id}`}
-                    sx={{ mt: 2 }}
-                    variant="outlined"
+                <CardActionArea
+                  component={Link}
+                  to={`/products/${product.id}`}
+                  sx={{
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                  }}
+                >
+                  <Box sx={{ position: "relative" }}>
+                    <CardMedia
+                      component="img"
+                      image={product.thumbnail}
+                      alt={product.title}
+                      sx={{
+                        objectFit: "cover",
+                        height: 180,
+                        width: "100%",
+                      }}
+                    ></CardMedia>
+                  </Box>
+
+                  <CardContent
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 0.5,
+                      flexGrow: 1,
+                      width: "100%",
+                      pt: 2,
+                      pb: 1,
+                    }}
                   >
-                    Подробнее
-                  </Button>
-                </CardContent>
+                    <Typography
+                      variant="subtitle1"
+                      component="span"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        lineHeight: 1.3,
+                        minHeight: "2.6em",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {product.title}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        lineHeight: 1.6,
+                        minHeight: "1.6em",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {product.brand}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mt: "auto",
+                        pt: 1,
+                      }}
+                    >
+                      <Typography variant="subtitle2">
+                        {product.price}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {product.rating}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+                <Box
+                  sx={{
+                    px: 2,
+                    pb: 2,
+                    display: "flex",
+                    gap: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <LikeButton id={product.id} size="small" stopNav />
+                  <DeleteIcon
+                    sx={{ color: "#ee9595", cursor: "pointer", ml: "auto" }}
+                  />
+                </Box>
               </Card>
             </Grid>
           ))}
