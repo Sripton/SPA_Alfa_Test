@@ -4,6 +4,7 @@ import {
   TOGGLE_LIKE,
   SET_LIKES,
   REMOVE_PRODUCT,
+  CREATE_PRODUCT,
 } from "../types/productTypes";
 import type { Product, ProductsAction } from "../types/productTypes";
 import type { Dispatch } from "redux";
@@ -63,7 +64,7 @@ export const toggleLike =
   (id: number | string) =>
   async (
     dispatch: Dispatch,
-    getState: () => { products: { likedIds: number[] } }
+    getState: () => { products: { likedIds: number[] } } // чтениe текущего стора
   ) => {
     const idNum = Number(id);
     if (Number.isNaN(idNum)) return;
@@ -77,8 +78,25 @@ export const toggleLike =
     }
   };
 
+export const removeProduct = (id: number): ProductsAction => ({
+  type: REMOVE_PRODUCT,
+  payload: id,
+});
 
-  export const removeProduct = (id: number): ProductsAction => ({
-    type: REMOVE_PRODUCT,
-    payload: id
-  });
+export const createProduct =
+  (data: Omit<Product, "id">) =>
+  (
+    dispatch: Dispatch,
+    getState: () => { products: { items: Product[]; created: Product[] } }
+  ) => {
+    const { items, created } = getState().products;
+    const allIds = [...items, ...created].map((p) => p.id);
+    const nextID = (allIds.length ? Math.max(...allIds) : 0) + 1; //  генерируем id для нового товара
+    const product: Product = { id: nextID, ...data };
+    dispatch<ProductsAction>({ type: CREATE_PRODUCT, payload: product });
+    const saved = JSON.parse(localStorage.getItem("createdProducts") || "[]");
+    localStorage.setItem(
+      "createdProducts",
+      JSON.stringify([...saved, product])
+    );
+  };

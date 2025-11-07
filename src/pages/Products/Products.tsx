@@ -12,8 +12,10 @@ import {
   Box,
   Pagination,
   CardActionArea,
+  IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CreateIcon from "@mui/icons-material/Create";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store/productStore";
@@ -73,6 +75,23 @@ export default function Products() {
         <Button variant="contained" onClick={handleSearch}>
           Найти
         </Button>
+        <IconButton
+          aria-label="Создать товар"
+          component={Link}
+          to={`/create-product`}
+          sx={{
+            position: { xs: "static" },
+            right: { sm: 10 },
+            ml: { xs: "auto" }, // чтобы на xs прижалась вправо
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
+            borderRadius: 2,
+            boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
+            "&:hover": { bgcolor: "primary.dark" },
+          }}
+        >
+          <CreateIcon />
+        </IconButton>
       </Stack>
 
       <>

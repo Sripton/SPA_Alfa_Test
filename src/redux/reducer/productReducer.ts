@@ -4,6 +4,7 @@ import {
   SET_LIKES,
   TOGGLE_LIKE,
   REMOVE_PRODUCT,
+  CREATE_PRODUCT,
 } from "../types/productTypes";
 import type { ProductsState } from "../types/productTypes";
 import type { AnyAction } from "@reduxjs/toolkit";
@@ -70,6 +71,16 @@ export default function productsReducer(
         items: state.items.filter((p) => p.id !== idNum),
         total: Math.max(state.total - (exist ? 0 : 1)),
         likedIds: state.likedIds.filter((p) => p !== idNum),
+      };
+    }
+
+    case CREATE_PRODUCT: {
+      const product = action.payload;
+      return {
+        ...state,
+        created: [product, ...state.items],
+        items: [product, ...state.items],
+        total: state.total + 1,
       };
     }
     default:
